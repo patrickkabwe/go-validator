@@ -7,7 +7,7 @@ The go-validator package provides a set of functions for validating common data 
 To use this package, you need to have Go installed and set up. Then you can run the following command to add the package to your project:
 
 ```go
-go get github.com/Kazion500/go-validator
+go get github.com/kazion500/go-validator
 ```
 
 ## Usage
@@ -15,7 +15,7 @@ go get github.com/Kazion500/go-validator
 Import the validator package into your Go code:
 
 ```go
-import "github.com/Kazion500/go-validator"
+import "github.com/kazion500/go-validator"
 ```
 
 ## Creating a Validator
