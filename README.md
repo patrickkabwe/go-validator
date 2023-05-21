@@ -2,6 +2,8 @@
 
 The go-validator package provides a set of functions for validating common data types in a Go Application. It includes validation for email addresses, URLs, IP addresses, and structural validation of structs based on tag annotations.
 
+![Coverage](https://github.com/Kazion500/go-validator/actions/workflows/go.yml/badge.svg)
+
 ## Installation
 
 To use this package, you need to have Go installed and set up. Then you can run the following command to add the package to your project:
