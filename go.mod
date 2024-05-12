@@ -1,4 +1,4 @@
-module github.com/kazion500/go-validator
+module github.com/patrickkabwe/go-validator
 
 go 1.20
 
