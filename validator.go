@@ -138,8 +138,18 @@ func (v *validator) handleStructValidation(input []string, fieldName string, fie
 				v.errors = errorMap{fieldName: ErrEmptyField}
 			}
 		case "int":
-			if tag == "required" && val.Int() == 0 {
-				errors = append(errors, fmt.Errorf("%s is required", name))
+			if ok, err := v.isInt(fieldValue); !ok {
+				v.errors = errorMap{fieldName: err}
+			}
+		case "email":
+			if ok, err := v.IsEmail(fieldValue.(string)); !ok {
+				v.errors = errorMap{fieldName: err}
+			}
+
+		case "url":
+			ok, err := v.IsURL(fieldValue.(string))
+			if !ok {
+				v.errors = errorMap{fieldName: err}
 			}
 		}
 		// TODO: handle embedded structs, slices, maps, etc.
