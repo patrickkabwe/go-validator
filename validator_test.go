@@ -235,3 +235,42 @@ func TestValidate__validateStruct(t *testing.T) {
 		})
 	}
 }
+
+func TestValidate__validatePointerStruct(t *testing.T) {
+	testCases := []TestCase[*StructTest]{
+		{
+			name: "invalid pointer struct - age is missing",
+			input: &StructTest{
+				Name: "test",
+				Phone: 1234567890,
+			},
+			expectedErr: true,
+		},
+
+		{
+			name: "valid pointer struct",
+			input: &StructTest{
+				Name: "test",
+				Age: 10,
+				Phone: 1234567890,
+				Email: "test@gmail.com",
+			},
+			expectedErr: false,
+		},
+	}
+
+	validator := New()
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			errs := validator.ValidateStruct(tc.input)
+
+			if tc.expectedErr {
+				assert.Greater(t, len(errs), 0)
+			} else {
+				assert.Equal(t, 0, len(errs))
+			}
+
+		})
+	}
+}
