@@ -32,6 +32,7 @@ type Validator interface {
 	IsURL(input string) (ok bool, err error)
 	IsIP(input string) (ok bool, err error)
 	ValidateStruct(input any) []error
+	ValidateStruct(input any) errorMap
 }
 
 // validator is an implementation of Validator.
