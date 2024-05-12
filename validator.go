@@ -109,15 +109,34 @@ func (v *validator) ValidateStruct(input any) []error {
 
 	for i := 0; i < st.NumField(); i++ {
 		field := st.Field(i)
-		name := field.Name
-		tag := field.Tag.Get("validate")
-		fieldType := fmt.Sprintf("%v", field.Type)
-		val := reflect.ValueOf(input).Field(i)
+		fieldName := field.Name
+		validateTag := field.Tag.Get("validate")
+		fieldValue := reflect.ValueOf(input).Field(i)
+		validateTags := strings.Split(validateTag, ",")
 
-		switch fieldType {
-		case "string":
-			if tag == "required" && val.String() == "" {
-				errors = append(errors, fmt.Errorf("%s is required", name))
+		var actualValue any
+		switch fieldValue.Kind() {
+			case reflect.Interface:
+				actualValue = fieldValue.Interface()
+			default:
+				actualValue = fieldValue.String()
+		}
+		
+		v.handleStructValidation( validateTags, strings.ToLower(fieldName), actualValue)
+
+		// TODO: handle embedded structs, slices, maps, etc.
+	}
+
+	return v.errors
+}
+
+
+func (v *validator) handleStructValidation(input []string, fieldName string, fieldValue any) {
+	for _, field := range input {
+		switch field {
+		case "required":
+			if fieldValue == "" {
+				v.errors = errorMap{fieldName: ErrEmptyField}
 			}
 		case "int":
 			if tag == "required" && val.Int() == 0 {
