@@ -107,6 +107,14 @@ func (v *validator) isInt(input any) (ok bool, err error) {
 func (v *validator) ValidateStruct(input any) errorMap {
 	st := reflect.TypeOf(input)
 	v.errors = make(errorMap)
+	inputKind := st.Kind()
+
+	if inputKind == reflect.Ptr {
+		st = st.Elem()
+		input = reflect.ValueOf(input).Elem().Interface()
+		fmt.Println(input)
+	}	
+
 	for i := 0; i < st.NumField(); i++ {
 		field := st.Field(i)
 		fieldName := field.Name
