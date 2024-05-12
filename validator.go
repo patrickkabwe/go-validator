@@ -94,6 +94,14 @@ func (v *validator) IsIP(input string) (ok bool, err error) {
 }
 
 func (v *validator) isInt(input any) (ok bool, err error) {
+	switch input := input.(type) {
+	case int:
+		return true, nil
+	default:
+		return false, fmt.Errorf("expected int, got %T", input)
+	}
+}
+
 // ValidateStruct returns an a slice of errors if the struct input values have 'validate' tags.
 func (v *validator) ValidateStruct(input any) []error {
 	errors := []error{}
