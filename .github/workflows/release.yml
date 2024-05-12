@@ -33,16 +33,4 @@ jobs:
           GOPROXY=proxy.golang.org go list -m github.com/patrickkabwe/go-validator@${{ github.event.release.tag_name }}
           echo "Release created!"
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.event.release.tag_name  }}
-          release_name: Release ${{ github.event.release.tag_name  }}
-          body: |
-            Changes in this Release
-            ${{ github.event.release.body }}
-
               
