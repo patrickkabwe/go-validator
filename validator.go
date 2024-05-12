@@ -103,8 +103,7 @@ func (v *validator) isInt(input any) (ok bool, err error) {
 }
 
 // ValidateStruct returns an a slice of errors if the struct input values have 'validate' tags.
-func (v *validator) ValidateStruct(input any) []error {
-	errors := []error{}
+func (v *validator) ValidateStruct(input any) errorMap {
 	st := reflect.TypeOf(input)
 
 	for i := 0; i < st.NumField(); i++ {
