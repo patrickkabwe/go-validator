@@ -9,13 +9,14 @@ import (
 type TestCase[T any] struct {
 	name     string
 	input    T
-	expected bool
+	expectedErr bool
 }
 
 type StructTest struct {
 	Name  string `validate:"required" json:"name"`
-	Age   int    `validate:"optional" json:"age"`
+	Age   any    `validate:"int,required" json:"age"`
 	Phone int    `validate:"required" json:"phone"`
+	Email string `validate:"email" json:"email"`
 }
 
 func TestValidate__isEmail(t *testing.T) {
@@ -23,37 +24,37 @@ func TestValidate__isEmail(t *testing.T) {
 		{
 			name:     "not valid email address (Missing @)",
 			input:    "test.com",
-			expected: false,
+			expectedErr: true,
 		},
 		{
 			name:     "not valid email address (Empty string)",
 			input:    "",
-			expected: false,
+			expectedErr: true,
 		},
 		{
 			name:     "not valid email address (Missing .)",
 			input:    "test@testcom",
-			expected: false,
+			expectedErr: true,
 		},
 		{
 			name:     "not valid email address (Missing domain)",
 			input:    "test@.com",
-			expected: false,
+			expectedErr: true,
 		},
 		{
 			name:     "not valid email address (Missing local part)",
 			input:    "@test.com",
-			expected: false,
+			expectedErr: true,
 		},
 		{
 			name:     "not valid email address (Missing local part and domain)",
 			input:    "@.com",
-			expected: false,
+			expectedErr: true,
 		},
 		{
 			name:     "valid email address",
 			input:    "test@gmail.com",
-			expected: true,
+			expectedErr: false,
 		},
 	}
 
@@ -62,12 +63,13 @@ func TestValidate__isEmail(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			isValid, err := validator.IsEmail(tc.input)
-			if tc.expected {
-				assert.NoError(t, err)
-			} else {
+			if tc.expectedErr {
 				assert.ErrorIs(t, err, ErrEmailNotValid)
+			} else {
+				assert.NoError(t, err)
+				assert.True(t, isValid)
 			}
-			assert.Equal(t, tc.expected, isValid)
+			
 		})
 	}
 }
@@ -77,12 +79,12 @@ func TestValidate__isEmpty(t *testing.T) {
 		{
 			name:     "empty string",
 			input:    "",
-			expected: true,
+			expectedErr: true,
 		},
 		{
 			name:     "not empty string",
 			input:    "test",
-			expected: false,
+			expectedErr: false,
 		},
 	}
 
@@ -91,12 +93,13 @@ func TestValidate__isEmpty(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			isValid, err := validator.IsEmpty(tc.input)
-			if tc.expected {
-				assert.NoError(t, err)
-			} else {
+			if tc.expectedErr {
 				assert.ErrorIs(t, err, ErrNotEmptyField)
+			} else {
+				assert.NoError(t, err)
+				assert.True(t, isValid)
+			
 			}
-			assert.Equal(t, tc.expected, isValid)
 		})
 	}
 }
@@ -106,17 +109,22 @@ func TestValidate__isURL(t *testing.T) {
 		{
 			name:     "not valid url",
 			input:    "",
-			expected: false,
+			expectedErr: true,
 		},
 		{
 			name:     "not valid url",
 			input:    "test.com",
-			expected: false,
+			expectedErr: true,
 		},
 		{
-			name:     "valid url",
+			name:     "valid url using http protocol",
 			input:    "https://www.google.com",
-			expected: true,
+			expectedErr: false,
+		},
+		{
+			name:     "valid url using postgres protocol",
+			input:    "postgres://localhost:5432/testdb",
+			expectedErr: false,
 		},
 	}
 
@@ -125,12 +133,12 @@ func TestValidate__isURL(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			isValid, err := validator.IsURL(tc.input)
-			if tc.expected {
-				assert.NoError(t, err)
-			} else {
+			if tc.expectedErr {
 				assert.ErrorIs(t, err, ErrUrlNotValid)
+			} else {
+				assert.NoError(t, err)
+				assert.True(t, isValid)
 			}
-			assert.Equal(t, tc.expected, isValid)
 		})
 	}
 }
@@ -140,12 +148,12 @@ func TestValidate__isIP(t *testing.T) {
 		{
 			name:     "not valid ip",
 			input:    "192.168.0",
-			expected: false,
+			expectedErr: true,
 		},
 		{
 			name:     "valid ip",
 			input:    "192.168.0.1",
-			expected: true,
+			expectedErr: false,
 		},
 	}
 
@@ -154,42 +162,61 @@ func TestValidate__isIP(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			isValid, err := validator.IsIP(tc.input)
-			if tc.expected {
-				assert.NoError(t, err)
-			} else {
+			if tc.expectedErr {
 				assert.ErrorIs(t, err, ErrIpAddressNotValid)
+			} else {
+				assert.NoError(t, err)
+				assert.True(t, isValid)
 			}
-			assert.Equal(t, tc.expected, isValid)
 		})
 	}
-
 }
 
 func TestValidate__validateStruct(t *testing.T) {
 	testCases := []TestCase[StructTest]{
 		{
-			name: "struct with optional field",
+			name: "invalid struct - age is missing",
 			input: StructTest{
 				Name: "test",
 				Phone: 1234567890,
 			},
-			expected: true,
+			expectedErr: true,
 		},
 		{
-			name: "struct with missing required name field",
+			name: "invalid struct - age is not an integer and name is missing",
+			input: StructTest{
+				Age: "10",
+				Phone: 1234567890,
+			},
+			expectedErr: true,
+		},
+		{
+			name: "invalid struct - name is missing",
 			input: StructTest{
 				Age: 10,
 				Phone: 1234567890,
 			},
-			expected: false,
+			expectedErr: true,
 		},
 		{
-			name: "struct with missing required phone field",
+			name: "invalid struct - email is not valid",
 			input: StructTest{
 				Name: "test",
 				Age: 10,
+				Phone: 1234567890,
+				Email: "test",
 			},
-			expected: false,
+			expectedErr: true,
+		},
+		{
+			name: "valid struct",
+			input: StructTest{
+				Name: "test",
+				Age: 10,
+				Phone: 1234567890,
+				Email: "test@gmail.com",
+			},
+			expectedErr: false,
 		},
 	}
 
@@ -199,10 +226,10 @@ func TestValidate__validateStruct(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			errs := validator.ValidateStruct(tc.input)
 
-			if tc.expected {
-				assert.Equal(t, 0, len(errs))
+			if tc.expectedErr {
+				assert.Greater(t, len(errs), 0)
 			} else {
-				assert.Equal(t, 1, len(errs))
+				assert.Equal(t, 0, len(errs))
 			}
 
 		})
