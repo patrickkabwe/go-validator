@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-          go: [ '1.20' ]
+          go: [ '1.20.14' ]
     steps:
       - uses: actions/checkout@v4
       - name: Set up Go
