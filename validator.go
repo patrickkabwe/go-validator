@@ -19,6 +19,12 @@ var (
 	ErrIpAddressNotValid = errors.New("ip address not valid")
 )
 
+type ValidatorError interface {
+	Error() string
+}
+
+type errorMap map[string]ValidatorError
+
 // Validator is the interface that wraps the Validate method.
 type Validator interface {
 	IsEmail(input string) (ok bool, err error)
