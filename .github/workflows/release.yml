@@ -4,6 +4,12 @@ on:
   release: 
     types: [prereleased, published]
 
+permissions:
+  contents: write
+  pull-requests: write
+  repository-projects: write
+  issues: write
+
 jobs:
   release:
     runs-on: ubuntu-latest

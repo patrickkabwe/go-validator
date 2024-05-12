@@ -2,7 +2,7 @@
 
 # Go Validator
 
-Go Validator is a simple package for validating email addresses, URLs, IP addresses, and empty fields in Go. It also provides a way to validate struct fields using struct tags.
+Go Validator is a simple package for validating structs, email addresses, URLs, IP addresses, and empty fields in Go. It also provides a way to validate struct fields using struct tags.
 
 ## Installation
 
