@@ -93,6 +93,7 @@ func (v *validator) IsIP(input string) (ok bool, err error) {
 	return true, nil
 }
 
+func (v *validator) isInt(input any) (ok bool, err error) {
 // ValidateStruct returns an a slice of errors if the struct input values have 'validate' tags.
 func (v *validator) ValidateStruct(input any) []error {
 	errors := []error{}
