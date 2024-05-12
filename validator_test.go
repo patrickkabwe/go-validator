@@ -239,7 +239,7 @@ func TestValidate__validateStruct(t *testing.T) {
 func TestValidate__validatePointerStruct(t *testing.T) {
 	testCases := []TestCase[*StructTest]{
 		{
-			name: "invalid pointer struct - age is missing",
+			name: "invalid pointer struct - age and email is missing",
 			input: &StructTest{
 				Name: "test",
 				Phone: 1234567890,
