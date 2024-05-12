@@ -92,12 +92,12 @@ func (v *validator) IsIP(input string) (ok bool, err error) {
 	return true, nil
 }
 
-func (v *validator) isInt(input any) (ok bool, err error) {
-	switch input := input.(type) {
+func (v *validator) isInt(input any,fieldName string) (ok bool, err error) {
+	switch input.(type) {
 	case int:
 		return true, nil
 	default:
-		return false, fmt.Errorf("expected int, got %T", input)
+		return false, fmt.Errorf("%v is not an integer", fieldName)
 	}
 }
 
@@ -141,21 +141,21 @@ func (v *validator) handleStructValidation(input []string, fieldName string, fie
 		switch field {
 		case "required":
 			if fieldValue == "" {
-				v.errors = errorMap{fieldName: fmt.Errorf("%s is required", fieldName)}
+				v.errors[fieldName] = fmt.Errorf("%s is required", fieldName)
 			}
 		case "int":
-			if ok, err := v.isInt(fieldValue); !ok {
-				v.errors = errorMap{fieldName: err}
+			if ok, err := v.isInt(fieldValue, fieldName); !ok {
+				v.errors[fieldName] = err
 			}
 		case "email":
 			if ok, err := v.IsEmail(fieldValue.(string)); !ok {
-				v.errors = errorMap{fieldName: err}
+				v.errors[fieldName] = err
 			}
 
 		case "url":
 			ok, err := v.IsURL(fieldValue.(string))
 			if !ok {
-				v.errors = errorMap{fieldName: err}
+				v.errors[fieldName] = err
 			}
 		}
 	}
