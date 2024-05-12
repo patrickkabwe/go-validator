@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"reflect"
 	"regexp"
+	"strings"
 )
 
 var (
@@ -31,12 +32,12 @@ type Validator interface {
 	IsEmpty(input string) (ok bool, err error)
 	IsURL(input string) (ok bool, err error)
 	IsIP(input string) (ok bool, err error)
-	ValidateStruct(input any) []error
 	ValidateStruct(input any) errorMap
 }
 
 // validator is an implementation of Validator.
 type validator struct {
+	errors errorMap
 }
 
 // New returns a new Validator.
@@ -152,8 +153,6 @@ func (v *validator) handleStructValidation(input []string, fieldName string, fie
 				v.errors = errorMap{fieldName: err}
 			}
 		}
-		// TODO: handle embedded structs, slices, maps, etc.
 	}
-
-	return errors
 }
+
