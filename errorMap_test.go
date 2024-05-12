@@ -6,7 +6,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-
 func TestErrorMap(t *testing.T) {
 	testCases := []struct {
 		name     string
@@ -19,13 +18,13 @@ func TestErrorMap(t *testing.T) {
 			expected: map[string]string{},
 		},
 		{
-			name: "error map with one error",
-			input: errorMap{"email": ErrEmailNotValid },
+			name:     "error map with one error",
+			input:    errorMap{"email": ErrEmailNotValid},
 			expected: map[string]string{"email": ErrEmailNotValid.Error()},
 		},
 		{
-			name: "error map with multiple errors",
-			input: errorMap{"email": ErrEmailNotValid, "phone": ErrNotEmptyField},
+			name:     "error map with multiple errors",
+			input:    errorMap{"email": ErrEmailNotValid, "phone": ErrNotEmptyField},
 			expected: map[string]string{"email": ErrEmailNotValid.Error(), "phone": ErrNotEmptyField.Error()},
 		},
 	}
@@ -36,4 +35,3 @@ func TestErrorMap(t *testing.T) {
 		})
 	}
 }
-

@@ -4,6 +4,8 @@ on:
   push: 
   pull_request:
     branches: ["main"]
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -17,6 +19,17 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go }}
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
+                
+      - name: Lint
+        run: golangci-lint run ./...
+
+      - name: Format
+        run: go fmt ./...
 
       - name: Build
         run: go build -v ./...

@@ -7,8 +7,8 @@ import (
 )
 
 type TestCase[T any] struct {
-	name     string
-	input    T
+	name        string
+	input       T
 	expectedErr bool
 }
 
@@ -22,38 +22,38 @@ type StructTest struct {
 func TestValidate__isEmail(t *testing.T) {
 	testCases := []TestCase[string]{
 		{
-			name:     "not valid email address (Missing @)",
-			input:    "test.com",
+			name:        "not valid email address (Missing @)",
+			input:       "test.com",
 			expectedErr: true,
 		},
 		{
-			name:     "not valid email address (Empty string)",
-			input:    "",
+			name:        "not valid email address (Empty string)",
+			input:       "",
 			expectedErr: true,
 		},
 		{
-			name:     "not valid email address (Missing .)",
-			input:    "test@testcom",
+			name:        "not valid email address (Missing .)",
+			input:       "test@testcom",
 			expectedErr: true,
 		},
 		{
-			name:     "not valid email address (Missing domain)",
-			input:    "test@.com",
+			name:        "not valid email address (Missing domain)",
+			input:       "test@.com",
 			expectedErr: true,
 		},
 		{
-			name:     "not valid email address (Missing local part)",
-			input:    "@test.com",
+			name:        "not valid email address (Missing local part)",
+			input:       "@test.com",
 			expectedErr: true,
 		},
 		{
-			name:     "not valid email address (Missing local part and domain)",
-			input:    "@.com",
+			name:        "not valid email address (Missing local part and domain)",
+			input:       "@.com",
 			expectedErr: true,
 		},
 		{
-			name:     "valid email address",
-			input:    "test@gmail.com",
+			name:        "valid email address",
+			input:       "test@gmail.com",
 			expectedErr: false,
 		},
 	}
@@ -69,7 +69,7 @@ func TestValidate__isEmail(t *testing.T) {
 				assert.NoError(t, err)
 				assert.True(t, isValid)
 			}
-			
+
 		})
 	}
 }
@@ -77,13 +77,13 @@ func TestValidate__isEmail(t *testing.T) {
 func TestValidate__isEmpty(t *testing.T) {
 	testCases := []TestCase[string]{
 		{
-			name:     "empty string",
-			input:    "",
+			name:        "empty string",
+			input:       "",
 			expectedErr: true,
 		},
 		{
-			name:     "not empty string",
-			input:    "test",
+			name:        "not empty string",
+			input:       "test",
 			expectedErr: false,
 		},
 	}
@@ -98,7 +98,7 @@ func TestValidate__isEmpty(t *testing.T) {
 			} else {
 				assert.NoError(t, err)
 				assert.True(t, isValid)
-			
+
 			}
 		})
 	}
@@ -107,23 +107,23 @@ func TestValidate__isEmpty(t *testing.T) {
 func TestValidate__isURL(t *testing.T) {
 	testCases := []TestCase[string]{
 		{
-			name:     "not valid url",
-			input:    "",
+			name:        "not valid url",
+			input:       "",
 			expectedErr: true,
 		},
 		{
-			name:     "not valid url",
-			input:    "test.com",
+			name:        "not valid url",
+			input:       "test.com",
 			expectedErr: true,
 		},
 		{
-			name:     "valid url using http protocol",
-			input:    "https://www.google.com",
+			name:        "valid url using http protocol",
+			input:       "https://www.google.com",
 			expectedErr: false,
 		},
 		{
-			name:     "valid url using postgres protocol",
-			input:    "postgres://localhost:5432/testdb",
+			name:        "valid url using postgres protocol",
+			input:       "postgres://localhost:5432/testdb",
 			expectedErr: false,
 		},
 	}
@@ -146,13 +146,13 @@ func TestValidate__isURL(t *testing.T) {
 func TestValidate__isIP(t *testing.T) {
 	testCases := []TestCase[string]{
 		{
-			name:     "not valid ip",
-			input:    "192.168.0",
+			name:        "not valid ip",
+			input:       "192.168.0",
 			expectedErr: true,
 		},
 		{
-			name:     "valid ip",
-			input:    "192.168.0.1",
+			name:        "valid ip",
+			input:       "192.168.0.1",
 			expectedErr: false,
 		},
 	}
@@ -177,7 +177,7 @@ func TestValidate__validateStruct(t *testing.T) {
 		{
 			name: "invalid struct - age is missing",
 			input: StructTest{
-				Name: "test",
+				Name:  "test",
 				Phone: 1234567890,
 			},
 			expectedErr: true,
@@ -185,7 +185,7 @@ func TestValidate__validateStruct(t *testing.T) {
 		{
 			name: "invalid struct - age is not an integer and name is missing",
 			input: StructTest{
-				Age: "10",
+				Age:   "10",
 				Phone: 1234567890,
 			},
 			expectedErr: true,
@@ -193,7 +193,7 @@ func TestValidate__validateStruct(t *testing.T) {
 		{
 			name: "invalid struct - name is missing",
 			input: StructTest{
-				Age: 10,
+				Age:   10,
 				Phone: 1234567890,
 			},
 			expectedErr: true,
@@ -201,8 +201,8 @@ func TestValidate__validateStruct(t *testing.T) {
 		{
 			name: "invalid struct - email is not valid",
 			input: StructTest{
-				Name: "test",
-				Age: 10,
+				Name:  "test",
+				Age:   10,
 				Phone: 1234567890,
 				Email: "test",
 			},
@@ -211,8 +211,8 @@ func TestValidate__validateStruct(t *testing.T) {
 		{
 			name: "valid struct",
 			input: StructTest{
-				Name: "test",
-				Age: 10,
+				Name:  "test",
+				Age:   10,
 				Phone: 1234567890,
 				Email: "test@gmail.com",
 			},
@@ -241,7 +241,7 @@ func TestValidate__validatePointerStruct(t *testing.T) {
 		{
 			name: "invalid pointer struct - age and email is missing",
 			input: &StructTest{
-				Name: "test",
+				Name:  "test",
 				Phone: 1234567890,
 			},
 			expectedErr: true,
@@ -250,8 +250,8 @@ func TestValidate__validatePointerStruct(t *testing.T) {
 		{
 			name: "valid pointer struct",
 			input: &StructTest{
-				Name: "test",
-				Age: 10,
+				Name:  "test",
+				Age:   10,
 				Phone: 1234567890,
 				Email: "test@gmail.com",
 			},

@@ -92,7 +92,7 @@ func (v *validator) IsIP(input string) (ok bool, err error) {
 	return true, nil
 }
 
-func (v *validator) isInt(input any,fieldName string) (ok bool, err error) {
+func (v *validator) isInt(input any, fieldName string) (ok bool, err error) {
 	switch input.(type) {
 	case int:
 		return true, nil
@@ -110,7 +110,7 @@ func (v *validator) ValidateStruct(input any) errorMap {
 	if inputKind == reflect.Ptr {
 		st = st.Elem()
 		input = reflect.ValueOf(input).Elem().Interface()
-	}	
+	}
 
 	for i := 0; i < st.NumField(); i++ {
 		field := st.Field(i)
@@ -121,20 +121,19 @@ func (v *validator) ValidateStruct(input any) errorMap {
 
 		var actualValue any
 		switch fieldValue.Kind() {
-			case reflect.Interface:
-				actualValue = fieldValue.Interface()
-			default:
-				actualValue = fieldValue.String()
+		case reflect.Interface:
+			actualValue = fieldValue.Interface()
+		default:
+			actualValue = fieldValue.String()
 		}
-		
-		v.handleStructValidation( validateTags, strings.ToLower(fieldName), actualValue)
+
+		v.handleStructValidation(validateTags, strings.ToLower(fieldName), actualValue)
 
 		// TODO: handle embedded structs, slices, maps, etc.
 	}
 
 	return v.errors
 }
-
 
 func (v *validator) handleStructValidation(input []string, fieldName string, fieldValue any) {
 	for _, field := range input {
