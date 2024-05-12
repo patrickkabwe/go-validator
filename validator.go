@@ -62,7 +62,7 @@ func (v *validator) IsEmail(email string) (ok bool, err error) {
 
 // IsEmpty returns an error if the string is not empty.
 func (v *validator) IsEmpty(input string) (ok bool, err error) {
-	if input != "" {
+	if input == "" {
 		return false, ErrNotEmptyField
 	}
 	return true, nil
