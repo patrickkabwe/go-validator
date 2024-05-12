@@ -24,8 +24,6 @@ type ValidatorError interface {
 	Error() string
 }
 
-type errorMap map[string]ValidatorError
-
 // Validator is the interface that wraps the Validate method.
 type Validator interface {
 	IsEmail(input string) (ok bool, err error)
@@ -112,7 +110,6 @@ func (v *validator) ValidateStruct(input any) errorMap {
 	if inputKind == reflect.Ptr {
 		st = st.Elem()
 		input = reflect.ValueOf(input).Elem().Interface()
-		fmt.Println(input)
 	}	
 
 	for i := 0; i < st.NumField(); i++ {
@@ -163,4 +160,3 @@ func (v *validator) handleStructValidation(input []string, fieldName string, fie
 		}
 	}
 }
-
