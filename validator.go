@@ -131,7 +131,9 @@ func (v *validator) ValidateStruct(input any) errorMap {
 
 		// TODO: handle embedded structs, slices, maps, etc.
 	}
-
+	if len(v.errors) == 0 {
+		return nil
+	}
 	return v.errors
 }
 
