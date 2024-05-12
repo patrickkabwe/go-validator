@@ -144,7 +144,7 @@ func (v *validator) handleStructValidation(input []string, fieldName string, fie
 		switch field {
 		case "required":
 			if fieldValue == "" {
-				v.errors = errorMap{fieldName: ErrEmptyField}
+				v.errors = errorMap{fieldName: fmt.Errorf("%s is required", fieldName)}
 			}
 		case "int":
 			if ok, err := v.isInt(fieldValue); !ok {
