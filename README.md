@@ -12,6 +12,15 @@ To use this package, you need to have Go installed and set up. Then you can run 
 go get github.com/patrickkabwe/go-validator
 ```
 
+## Features 
+
+- 📧 `Email` validation
+- 🌐 `URL` validation
+- 🌐 `IP` address validation
+- 📝 `Empty` field validation
+- 📦 `Struct` validation using struct tags
+- 📊 `Map, Slice, Embedded Struct` validation (Coming Soon)
+
 ## Usage
 
 Import the validator package into your Go code:
