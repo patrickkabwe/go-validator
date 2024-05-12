@@ -230,6 +230,7 @@ func TestValidate__validateStruct(t *testing.T) {
 				assert.Greater(t, len(errs), 0)
 			} else {
 				assert.Equal(t, 0, len(errs))
+				assert.Nil(t, errs)
 			}
 
 		})
