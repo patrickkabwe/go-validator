@@ -1,9 +1,8 @@
 name: Release
 
 on:
-    push: 
-    release: 
-        types: [prereleased, published]
+  release: 
+    types: [prereleased, published]
 
 jobs:
   release:
